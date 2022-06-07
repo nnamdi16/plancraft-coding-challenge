@@ -2,7 +2,7 @@
 
 <br />
 <div align="center">
-  <h3 align="center">Evea Auth Service</h3>
+  <h3 align="center">Plancraft Coding Challenge</h3>
 
   <p align="center">
     Authentication, Authorization, Roles and Permission
