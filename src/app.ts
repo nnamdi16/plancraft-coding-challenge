@@ -1,24 +1,29 @@
+import { HttpServer } from './interfaces/http/server';
 import { Logger } from 'winston';
+import RedisDB from '../src/infrastructure/databases/redis/RedisDBManager'
+import express from 'express';
 /**
  * Manages application interfaces e.g REST server, gRPC server
  */
  class App {
-   private readonly httpServer: any;
+   private readonly httpServer: HttpServer;
    private readonly logger: Logger;
-   private readonly db: any;
+   private readonly db: RedisDB;
 
-    constructor({ httpServer, logger, db }: any) {
-      this.httpServer = httpServer;
+    constructor({ logger }: any) {
+      this.httpServer = new HttpServer;
       this.logger = logger;
-      this.db = db;
+      this.db = new RedisDB()
     }
   
     /**
      * Starts the application interfaces to begin handling user requests
      */
     async start() {
-      await this.db.connect();
+      // await this.db.connect();
       await this.httpServer.start();
+      // const app = express();
+      // app.get('/', (req, res) => res.send('Hello World!'));
     }
   
     /**
@@ -32,7 +37,7 @@ import { Logger } from 'winston';
             error: error.toString(),
           });
         }
-        await this.db.close();
+        // await this.db.close();
         process.exit(error ? 1 : 0);
       });
     }
