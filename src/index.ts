@@ -1,11 +1,12 @@
+import {HttpServer} from './interfaces/http/server';
+import {logger} from './infrastructure/logger';
 /**
  * Runs the application
  */
 
 import App from "./app";
-import container from "./container";
 
-const app = new App(container.cradle);
+const app = new App({HttpServer, logger});
  
  app.start();
 
