@@ -5,23 +5,29 @@ import errorHandler from "../../../infrastructure/middlewares/errorHandler";
 import helmet from "helmet";
 import morgan from "morgan";
 import v1Routes from "./v1";
+import config from './../../../config/index'
+import { logger, morganOption } from "../../../infrastructure/logger/index";
+import projectRoutes from '@interfaces/http/routes/v1/project';
 
 /**
  * Configures express middlewares
  */
-export default ({ config, containerMiddleware, morganOption }: any) => {
+export default () => {
   const router = Router();
-  router.use(helmet());
-  const NODE_ENV = config.get("app.env");
-  router.use(morgan('combined', NODE_ENV === "production" ? "combined" : morganOption));
+  // const app = express();
 
-  const bodyLimit = config.get("app.bodyLimit");
-  router.use(
-    express.json({
-      limit: bodyLimit,
-    }),
-  );
-  router.use(express.urlencoded({ extended: false, limit: bodyLimit }));
+  logger.info('We are routing at the moment')
+router.use(helmet());
+const NODE_ENV = config.get("app.env");
+router.use(morgan('combined', NODE_ENV === "production" ? "combined" : morganOption));
+
+const bodyLimit = config.get("app.bodyLimit");
+router.use(
+  express.json({
+    limit: bodyLimit,
+  }),
+);
+router.use(express.urlencoded({ extended: false, limit: bodyLimit }));
 
   // Setup CORS
   const allowedOrigins = config.get("app.allowedOrigins");
@@ -32,7 +38,8 @@ export default ({ config, containerMiddleware, morganOption }: any) => {
           cb(null, true);
         } else {
           const origins = allowedOrigins.split(",");
-          if (origins.indexOf(origin) !== -1 || !origin) {
+          console.log(origins)
+          if (origins.indexOf(origin as string) !== -1 || !origin) {
             cb(null, true);
           } else {
             cb(new Error(`Origin('${origin}') not allowed`));
@@ -43,14 +50,13 @@ export default ({ config, containerMiddleware, morganOption }: any) => {
     }),
   );
 
-  // https://www.npmjs.com/package/awilix-express
-  router.use(containerMiddleware);
-
-  router.get("/", (req, res) => res.json({
-    message: "Sample API template using Clean Architecture",
-  }));
-
-  router.use("/v1", v1Routes);
+  router.get("/", (req, res) => {
+    return res.json({
+      message: "Sample API template using Clean Architecture",
+    })
+  });
+  
+  router.use("/v1", projectRoutes);
 
 //   router.use(error404);
 
@@ -58,3 +64,45 @@ export default ({ config, containerMiddleware, morganOption }: any) => {
 
   return router;
 };
+
+// const router = express.Router();
+// router.use(helmet());
+// const NODE_ENV = config.get("app.env");
+// router.use(morgan('combined', NODE_ENV === "production" ? "combined" : morganOption));
+// const bodyLimit = config.get("app.bodyLimit");
+// router.use(
+//   express.json({
+//     limit: bodyLimit,
+//   }),
+// );
+// router.use(express.urlencoded({ extended: false, limit: bodyLimit }));
+
+
+//   // Setup CORS
+//   const allowedOrigins = config.get("app.allowedOrigins");
+//   router.use(
+//     cors({
+//       origin: (origin, cb) => {
+//         if (allowedOrigins.trim() === "*") {
+//           cb(null, true);
+//         } else {
+//           const origins = allowedOrigins.split(",");
+//           console.log(origins)
+//           if (origins.indexOf(origin as string) !== -1 || !origin) {
+//             cb(null, true);
+//           } else {
+//             cb(new Error(`Origin('${origin}') not allowed`));
+//           }
+//         }
+//       },
+//       optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+//     }),
+//   );
+// router.get("/", (req, res) => {
+//   console.log('I am here to look for you');
+//   return res.json({
+//     message: "Sample API template using Clean Architecture",
+//   })
+// });
+
+// export default router;
