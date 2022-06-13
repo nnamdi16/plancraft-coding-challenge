@@ -1,7 +1,6 @@
 import app from "./app";
 import cache from "./redis";
 import convict from "convict";
-import db from "./database";
 import dotEnvExtended from "dotenv-extended";
 
 // load environmental variable
@@ -20,7 +19,7 @@ dotEnvExtended.load({
 });
 
 // Combine configuration
-const configCombine = { app, db, cache };
+const configCombine = { app, cache };
 
 const config = convict(configCombine);
 
