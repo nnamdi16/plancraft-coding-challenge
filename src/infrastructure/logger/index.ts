@@ -71,7 +71,7 @@ function init() {
   return logger;
 }
 
-export const logger = init();
+export const logger:Logger = init();
 
 export const morganOption: any = {
   stream: {
