@@ -20,10 +20,7 @@ import express from 'express';
      * Starts the application interfaces to begin handling user requests
      */
     async start() {
-      // await this.db.connect();
       await this.httpServer.start();
-      // const app = express();
-      // app.get('/', (req, res) => res.send('Hello World!'));
     }
   
     /**
@@ -37,7 +34,6 @@ import express from 'express';
             error: error.toString(),
           });
         }
-        // await this.db.close();
         process.exit(error ? 1 : 0);
       });
     }

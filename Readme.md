@@ -5,7 +5,7 @@
   <h3 align="center">Plancraft Coding Challenge</h3>
 
   <p align="center">
-    Authentication, Authorization, Roles and Permission
+    Caching
     <br />
   </p>
 </div>
@@ -35,8 +35,8 @@
 <!-- ABOUT THE SERVICE -->
 
 ## About The Service
-
-This service manages everything that has to with authentication, authorization, roles, permissions, referrals
+This service  is a  REST API written in TypeScript that exposes methods to interact
+with a cache
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -44,11 +44,7 @@ This service manages everything that has to with authentication, authorization, 
 
 - [Typescript](https://www.typescriptlang.org)
 - [Node.js](https://nodejs.org/en/)
-- [MongoDB](https://www.mongodb.com/atlas/database)
-- [Docker](https://www.docker.com)
 - [Redis](https://redis.io)
-- [Elastic stacks](https://www.elastic.co/elastic-stack/)
-- [RabbitMQ](https://www.rabbitmq.com)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -61,13 +57,13 @@ This service manages everything that has to with authentication, authorization, 
 1. Clone the repo
 
    ```sh
-   git clone https://github.com/Evea01/evea-auth-service.git
+   git clone https://github.com/nnamdi16/plancraft-coding-challenge.git
    ```
 
 2. Cd into the directory
 
    ```sh
-   cd evea-auth-service
+   cd plancraft-coding-challenge
    ```
 
 3. Install NPM packages and Yarn, in your root directory of the project run the command below
@@ -84,7 +80,13 @@ This service manages everything that has to with authentication, authorization, 
 
 5. Copy the value inside .env.sample into the .env and fill the values for the necessary config
 
-6. Make sure your Mongodb and RabbitMQ is running locally
+6. Make sure your server Redis and Redis client is running locally
+
+  ```sh
+   redis-server  - for redis server
+
+   redis-commander - for redis client
+   ```
 
 7. Run the application
 
@@ -92,60 +94,24 @@ This service manages everything that has to with authentication, authorization, 
    yarn run dev
    ```
 
-#### Docker
-
-1. Clone the repo
-
-   ```sh
-   git clone https://github.com/Evea01/evea-auth-service.git
-   ```
-
-2. Cd into the directory
-
-   ```sh
-   cd evea-auth-service
-   ```
-
-3. Create an .env
-
-   ```sh
-   touch .env
-   ```
-
-4. Copy the value inside .env.sample into the .env and fill the values for the necessary config
-
-5. Run the application
-
-   ```sh
-   docker build -t evea/evea-auth-service .
-   ```
-
-   ```sh
-   docker run -it  -p 30100:30100  evea/evea-auth-service
-   ```
-
-## Usage
-
-For documentation, please refer to the [API Documentation](http://localhost:30100/rest-docs)
-
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Scripts
 
 - `yarn build` - Compiles src code into dist
 - `yarn start` - Starts the app in production mode
-- `npm run dev` - Starts the app in development mode
+- `yarn run dev` - Starts the app in development mode
 - `yarn test`: Run tests
 - `yarn run lint`: Lint code using ESLint
-- `yarn run docs:api` - generates API docs
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-Visit [http://localhost:9000/rest-docs](http://localhost:30100/rest-docs) for API documentation
+
 
 ## Contact
 
-Your Name - info@evea.africa
+Your Name - nwabuokeinnamdi19@gmail.com
 
 ## License
 
@@ -166,8 +132,6 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#scripts">Scripts</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#license">License</a></li>
   </ol>
@@ -327,56 +291,155 @@ To learn more about clean architecture, please read this article <https://blog.c
 - **infastructure**: Infastructure contains the logics to commuicate with all third party assisting application
 - **interface**: Inerface contains everything has to do with the Application Entry and route handlers
 - **interfaces**: Interfaces are delivery mechanisms for your app i.e how users access your app. For example, through a REST API, gRPC server, GraphQL. In this example, we are delivering our application using Express web framework for Nodejs.
-<<<<<<< HEAD
-- **scripts**: One time scripts go here. Read https://12factor.net/admin-processes to learn more
-=======
 - **scripts**: One time scripts go here. Read <https://12factor.net/admin-processes> to learn more
->>>>>>> 2ca0fddc04b23bfc6557979ccaa07344a7c2d5af
 
+
+## Requests and Response
+
+### Fetch all Cached projects
+Request
 ```js
-// ❌ Never ever do this!
-const client = new AWS.S3({
-  accessKeyId: process.env.IAM_KEY,
-  secretAccessKey: process.env.IAM_SECRET,
-  Bucket: process.env.BUCKET_NAME,
-  endpoint: process.env.AWS_ENDPOINT,
-  httpOptions: {
-    timeout: 1000 * 60 * 5,
-  },
-});
+curl --location --request GET 'http://localhost:30200/v1/project/fame' \
+--data-raw ''
 ```
 
-```js
-// ✅ Do this instead!
-// All app configurations are automatically exported into this object
-import config from 'config';
-const spacesUrl = config.get('spaces.spacesUrl');
-const awsIAMKey = config.get('spaces.awsIAMKey');
-const awsIAMSecret = config.get('spaces.awsIAMSecret');
-const bucket = config.get('spaces.bucket');
-const client = new AWS.S3({
-  accessKeyId: awsIAMKey,
-  secretAccessKey: awsIAMSecret,
-  Bucket: bucket,
-  endpoint: spacesEndpoint,
-  httpOptions: {
-    timeout: 1000 * 60 * 5,
-  },
-});
-```
-
-## Dependency Injection
-
-Dependency injection has been setup by default. Read <https://stackify.com/dependency-injection/> to learn more about DI (Dependency Injection). [awilix](https://www.npmjs.com/package/awilix) is the package used for implementing DI. Read [this article](https://medium.com/@Jeffijoe/dependency-injection-in-node-js-2016-edition-f2a88efdd427) to get familiar with Awilix. All models, use cases, entities you create are loaded automatically into the container.
-
-## Imports
+Response
 
 ```js
-// NEVER do this! ❌
-import Mystuff from '../here/there/onemore/last/mystuff.js'; // 🤮
+{
+    "success": true,
+    "status_code": 200,
+    "message": "success",
+    "data": [
+        {
+            "name": "fame",
+            "description": "Non quibusdam labore reiciendis odit soluta et minus.\nDolor qui ea dolores consequatur qui eos natus quo.\nAsperiores nihil quia id reprehenderit.",
+            "id": "5152201653"
+        }
+    ],
+    "links": null
+}
 ```
 
+### Fetch Cached project by Id
+Request
 ```js
-// Do this instead! ✅
-import MyStuff from 'alias/mystuff.js';
+curl --location --request GET 'http://localhost:30200/v1/project/fame/9117677429' \
+--data-raw ''
 ```
+
+Response
+
+```js
+{
+    "success": true,
+    "status_code": 200,
+    "message": "success",
+    "data": {
+        "name": "fame",
+        "description": "Non quibusdam labore reiciendis odit soluta et minus.\nDolor qui ea dolores consequatur qui eos natus quo.\nAsperiores nihil quia id reprehenderit.",
+        "id": "5152201653"
+    },
+    "links": null
+}
+```
+
+### Save project
+Request
+```js
+curl --location --request POST 'http://localhost:30200/v1/project' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+ "name": "power",
+ "description": "davidbowo1234567891356@yopmail.com"
+
+}'
+```
+
+Response
+
+```js
+{
+    "success": true,
+    "status_code": 201,
+    "message": "Project created successfully",
+    "data": {
+        "name": "power",
+        "description": "davidbowo1234567891356@yopmail.com",
+        "id": "9546627394"
+    },
+    "links": null
+}
+```
+
+### Delete Cached project
+Request
+```js
+curl --location --request DELETE 'http://localhost:30200/v1/project/9117677429' \
+--data-raw ''
+```
+
+Response
+
+```js
+{
+    "success": true,
+    "status_code": 200,
+    "message": "Deleted Successfully",
+    "data": null,
+    "links": null
+}
+```
+
+### Update Cached projects
+Request
+```js
+curl --location --request PUT 'http://localhost:30200/v1/project/update/3779117192' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+ "name": "project",
+ "description": "Peter Parker sold a stew of little pepper "
+
+}'
+```
+
+Response
+
+```js
+
+  {
+    "success": true,
+    "status_code": 200,
+    "message": "Updated Successfully",
+    "data": {
+        "name": "project",
+        "description": "Peter Parker sold a stew of little pepper ",
+        "id": "3779117192"
+    },
+    "links": null
+}
+```
+
+### Delete all Cached projects
+Request
+```js
+curl --location --request DELETE 'http://localhost:30200/v1/project' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+ "name": "Power"
+
+}'
+```
+
+Response
+
+```js
+{
+    "success": true,
+    "status_code": 200,
+    "message": "Deleted all Successfully",
+    "data": null,
+    "links": null
+}
+```
+

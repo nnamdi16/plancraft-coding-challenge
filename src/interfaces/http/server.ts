@@ -30,16 +30,6 @@ export class HttpServer {
   public base: any;
 
   constructor() {
-    // const app = express();
-    // app.disable('x-powered-by');
-
-    // app.use(
-    //   '/rest-docs',
-    //   express.static(path.resolve(__dirname, '../../../docs/apidocs/'))
-    // );
-    // app.use(routes);
-
-    // this.server = createServer(app);
     this.config = config;
     this.log = logger;
     this.port = config.get('app.port');
@@ -49,29 +39,17 @@ export class HttpServer {
 
   async start() {
     const app = express();
-    let router = express.Router();
     // URL for API documentation
     app.disable('x-powered-by');
-    // app.use(
-    //   '/rest-docs',
-    //   express.static(path.resolve(__dirname, '../../../docs/apidocs/'))
-    // );
-    // app.use('/',routes);
-    // router.get('/', (req, res) => res.send('Hello World!'));
+
     const data = routes()
-    app.use('/v1', data)
+    app.use('/', data)
     app.listen(this.port, () => this.log.info(`REST server for 
     ${this.serviceName} v${this.version} 
     listening on port ${this.port}`));
-    // this.server.listen(this.port, () => {
-    //   this.log.info(`REST server for 
-    //   ${this.serviceName} v${this.version} 
-    //   listening on port ${this.port}`);
-    // });
   }
 
   close(cb: any) {
-    // return this.server.close(cb);
   }
 }
 
