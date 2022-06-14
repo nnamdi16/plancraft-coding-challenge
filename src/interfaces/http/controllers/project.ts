@@ -1,10 +1,12 @@
+import { ICreateProject } from './../../../infrastructure/repositories/interfaces/IProject';
 import { validateRequest } from './../validations/common.validation';
 import { NextFunction, Request, Response } from "express";
 import { ResponseBuilder } from '../responses/ResponseBuilder';
 
 import Joi from "joi";
 import httpStatusCodes from "../common/httpStatusCode";
-import Project, { IProject } from '@src/app/project';
+import Project from '@src/app/project';
+import { IProject } from '@src/infrastructure/repositories/interfaces/IProject';
 
 class ProjectController {
     constructor() { }
@@ -12,17 +14,17 @@ class ProjectController {
     async retrieve(req: Request, res: Response, next: NextFunction) {
         try {
             const projectService = new Project();
-            const data = await projectService.getProjectById(req.params.id);
+            const data: IProject = await projectService.getProjectById(req?.params?.id, req?.params?.name);
             ResponseBuilder.getResponseHandler(res).onSuccess(data, 'success', httpStatusCodes.OK, null);
         } catch (error) {
             next(error);
         }
     }
 
-    async retrieveAll(_req: Request, res: Response, next: NextFunction) {
+    async retrieveAll(req: Request, res: Response, next: NextFunction) {
         try {
             const projectService = new Project();
-            const data = await projectService.getProjects();
+            const data:IProject [] = await projectService.getProjects(req?.params?.name);
             ResponseBuilder.getResponseHandler(res).onSuccess(data, 'success', httpStatusCodes.OK, null);
         } catch (error) {
             next(error);
@@ -31,9 +33,8 @@ class ProjectController {
 
     async create(req: Request, res: Response, next: NextFunction) {
         try {
-            const inputData: IProject = validateRequest(req, {
+            const inputData: ICreateProject = validateRequest(req, {
                 name: Joi.string().required(),
-                id: Joi.string().required(),
                 description: Joi.string().required()
             });
 
@@ -54,7 +55,7 @@ class ProjectController {
     async deleteProject(req: Request, res: Response, next: NextFunction) {
         try {
          const projectService = new Project();
-         await projectService.deleteProject(req.params.id);
+         await projectService.deleteProject(req?.params?.id, req?.params?.name);
          ResponseBuilder.getResponseHandler(res).onSuccess(null, 'Deleted Successfully', httpStatusCodes.OK, null);
         } catch (error) {
          next(error);
@@ -78,14 +79,15 @@ class ProjectController {
 
      async updateProject(req: Request, res: Response, next: NextFunction) {
         try {
-         const projectService = new Project();
-         const inputData: IProject = validateRequest(req, {
+         const inputData = validateRequest(req, {
             name: Joi.string().required(),
-            id: Joi.string().required(),
-            description: Joi.string().required()
+            description: Joi.string().required(),
+            id: Joi.string().required()
         });
-         const data = await projectService.updateProject(req.params.id, inputData);
-         ResponseBuilder.getResponseHandler(res).onSuccess(data, 'Deleted Successfully', httpStatusCodes.OK, null);
+        const projectService = new Project();
+        console.log(inputData);
+         const data = await projectService.updateProject(req.params.id, req.body);
+         ResponseBuilder.getResponseHandler(res).onSuccess(data, 'Updated Successfully', httpStatusCodes.OK, null);
         } catch (error) {
          next(error);
         }
