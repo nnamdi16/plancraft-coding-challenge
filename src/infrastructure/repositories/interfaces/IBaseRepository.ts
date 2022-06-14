@@ -1,10 +1,9 @@
 interface IBaseRepository {
-    persist(entity: any): Promise<any>;
-    getBy(entity:any, filter: any):Promise<any>;
+    persist(entity: any): Promise<number>;
+    getBy(entity:string, filter: string):Promise<any>;
     updateQuery(filter:any, update: any) : Promise<any>;
-    getIds(filter:any):Promise<any>;
     deleteAll(filter: any): Promise<any>;
-    deleteQuery(filter: any): Promise<any>;
+    deleteQuery(name:string, id:string): Promise<any>;
     getAll(entity: any): Promise<any>;
 }
 
