@@ -2,7 +2,7 @@ import {Logger} from 'winston';
 import { createClient, RedisClientType } from 'redis';
 import { Config } from 'convict';
 import config from '../../../config/index';
-import {logger} from '../../logger/index'
+import {logger} from '../../logger/index';
 
 
 /**
@@ -10,6 +10,8 @@ import {logger} from '../../logger/index'
  */
 
 class RedisDBManager {
+
+    
     private readonly config: Config<any>;
     private readonly port: number;
     private readonly host: string;
@@ -24,17 +26,12 @@ class RedisDBManager {
 
 
     async connect() {
-        // const portRedis = process.env.PORT_REDIS || '6379';
         const redisClient = createClient();
         redisClient.on('error', (err) => this.log.info('Redis Client Error', err));
         await redisClient.connect();
         redisClient.on('connect',  (err) => {
             this.log.info('Connected to Redis');
         })
-    }
-
-    async consume (redisClient: RedisClientType) {
-        
     }
 }
 
