@@ -11,7 +11,7 @@ class Project {
 
     async getProjectById(id: string, name:string) {
         const baseRepository = new BaseRepository();
-        const project: IProject = JSON.parse(await baseRepository.getBy('project', id));
+        const project: IProject = JSON.parse(await baseRepository.getBy(name, id));
 
         if (!project) {
             this.log.info('Cache missed');

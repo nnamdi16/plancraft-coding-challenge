@@ -3,13 +3,13 @@ import { Router } from "express";
 
 
 const router = Router();
-const api = new ProjectController();
+const {retrieve, retrieveAll, create, deleteProject, deleteProjects, updateProject} = new ProjectController();
 
-router.route('/:name/:id').get(api.retrieve);
-router.route('/:name').get(api.retrieveAll);
-router.route('/').post(api.create);
-router.route('/').delete(api.deleteProjects);
-router.route('/:name/:id').delete(api.deleteProject);
-router.route('/update/:id').put(api.updateProject);
+router.route('/:name/:id').get(retrieve);
+router.route('/:name').get(retrieveAll);
+router.route('/').post(create);
+router.route('/').delete(deleteProjects);
+router.route('/:name/:id').delete(deleteProject);
+router.route('/update/:id').put(updateProject);
 
 export default router;
