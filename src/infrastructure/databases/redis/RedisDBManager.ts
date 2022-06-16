@@ -31,7 +31,8 @@ class RedisDBManager {
         await redisClient.connect();
         redisClient.on('connect',  (err) => {
             this.log.info('Connected to Redis');
-        })
+        });
+        return redisClient;
     }
 }
 
